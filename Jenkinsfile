@@ -1,27 +1,32 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10'
-        }
-    }
+    agent any
 
     stages {
 
-        stage('Install Dependencies') {
+        stage('Install Python & Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh '''
+                apt-get update
+                apt-get install -y python3 python3-pip
+                python3 -m pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest -n 4 --alluredir=allure-results'
+                sh 'python3 -m pytest -n 4 --alluredir=allure-results'
             }
         }
 
         stage('Generate Report') {
             steps {
-                sh 'allure generate allure-results -o allure-report --clean'
+                sh '''
+                apt-get install -y default-jre
+                wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+                tar -xvzf allure-2.29.0.tgz
+                ./allure-2.29.0/bin/allure generate allure-results -o allure-report --clean
+                '''
             }
         }
     }
