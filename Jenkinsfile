@@ -1,13 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.10'
+        }
+    }
 
     stages {
-
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/your-username/qa-automation-framework.git'
-            }
-        }
 
         stage('Install Dependencies') {
             steps {
