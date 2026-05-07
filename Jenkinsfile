@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/swethagandham2003/notes-app-automation-framework.git'
+            }
+        }
 
         stage('Install Python & Dependencies') {
             steps {
